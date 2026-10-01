@@ -1,0 +1,32 @@
+{
+  "feature": "lidar.masked_angle_ranges",
+  "default": [],
+  "dedicated_tests_passed": 19,
+  "python_regression_tests_passed": 91,
+  "scope": "Real YAML parsing, mock sensor acquisition, production controller serialization and ROS callbacks with stubbed transport. No live Webots or ROS DDS execution.",
+  "range_contract": "Filtered image retains N*L ordered values; masked values are +inf. Strict JSON uses null and ROS restores +inf. The 2D ROS adapter selects layer L//2 for multilayer devices.",
+  "validation": [
+    "inclusive bounds with 1e-6 degree tolerance",
+    "negative angles",
+    "missing or empty key",
+    "invalid YAML/config rejected",
+    "overlaps warn and merge",
+    "degenerate and sub-step intervals",
+    "runtime FOV/resolution/layers",
+    "all layers masked consistently",
+    "input buffer unchanged",
+    "whole FOV mask",
+    "startup rejects invalid mask before transport",
+    "explicit reload recomputes indices",
+    "masked rays excluded from mapping, localization and obstacle checks"
+  ],
+  "sha256": {
+    "config/robot_parameters.yaml": "61e54a8b60f17eb6726ee09c9286ff70b52a16a74ae18adf71c38212566b83a4",
+    "ros_ws/src/fabtino_core/fabtino_core/config/robot_parameters.yaml": "2fcb6771f563c5e9bc3f609d1176f7dcb62f27e9dd1f5b281095919d00d9bc61",
+    "webots/controllers/fabtino_webots_bridge_controller/lidar_mask.py": "00b8e2992285947b27c723e9950d5248bacd8ae99d9ad48a4ba891c6d9200136",
+    "webots/controllers/fabtino_webots_bridge_controller/fabtino_webots_bridge_controller.py": "605ccc0e33ce4e363fedda5a873b6befb758d767349904477fe482edd6022398",
+    "ros_ws/src/fabtino_webots_bridge/fabtino_webots_bridge/webots_bridge_node.py": "10fdbba86fc9cbfd3a0c1647c8b01b2402c39ca7286a917beb5abc9bb22713da",
+    "tests/test_lidar_mask.py": "b9d5ce6258435e4235f83abc5bc624d9d2eacf5875d93d4607491e1b14cd4466",
+    "README_ROS2_HUMBLE.md": "3f77f1e4deac2d72c31af00d75b335731dababea766d750c8002a9faafa218d1"
+  }
+}

@@ -1,0 +1,167 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/lights/protos/CeilingLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/lights/protos/FloorLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/apartment_structure/protos/Wall.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/Parquetry.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/robots/rec/fabtino/protos/Fabtino.proto"
+
+WorldInfo {
+  info [
+    "Fabtino apartment simulation"
+    "Official Webots Fabtino with a fixed, centered, horizontal 360-degree LiDAR."
+    "SPACE or the browser toggles LiDAR acquisition without changing the robot geometry."
+  ]
+  title "Fabtino LiDAR Apartment Mapper"
+  basicTimeStep 16
+}
+Viewpoint {
+  orientation 0.0020893067850536948 0.00843422632942787 0.9999622485991068 3.512520344865201
+  position 9.310708075248256 3.0389101641195055 0.6826734573155323
+  near 0.1
+  follow "Fabtino"
+}
+TexturedBackground {
+}
+CeilingLight {
+  translation 1.82639 -1.29685 4.42
+  pointLightColor 1 1 0.9372549019607843
+  pointLightIntensity 7
+}
+CeilingLight {
+  translation -3.25511 6.10434 5.5
+  name "ceiling light(2)"
+  pointLightIntensity 6
+}
+FloorLight {
+  translation -4.52828 -6.73934 5.75
+  pointLightIntensity 2
+}
+Wall {
+  translation 20 0 0
+  size 0.3 40.3 2.4
+}
+Wall {
+  translation 0 20 0
+  rotation 0 0 1 1.5708
+  name "wall(2)"
+  size 0.3 39.7 2.4
+}
+Wall {
+  translation -20 0 0
+  name "wall(3)"
+  size 0.3 40.3 2.4
+}
+Wall {
+  translation 0 -20 0
+  rotation 0 0 1 1.5708
+  name "wall(4)"
+  size 0.3 39.7 2.4
+}
+Solid {
+  children [
+    Shape {
+      appearance Parquetry {
+        textureTransform TextureTransform {
+          scale 7 7
+        }
+      }
+      geometry Plane {
+        size 40 40
+      }
+    }
+  ]
+  boundingObject Plane {
+    size 39.9 39.9
+  }
+}
+Fabtino {
+  hidden linearVelocity_0 1.0810810284359745e-14 4.541144349924044e-15 -2.1221543041368325e-16
+  hidden angularVelocity_0 -2.4490449476518813e-16 2.3830473438304715e-16 -7.154030369815926e-15
+  hidden translation_1 0.285061 -0.235818 0.035257
+  hidden rotation_1 0 1 0 1.748401647315543
+  hidden linearVelocity_1 -2.703236435892654e-14 -1.5787705411068767e-15 5.174777242526796e-17
+  hidden angularVelocity_1 -1.1011262648015022e-15 -3.268546767263394e-15 -4.359570850184204e-15
+  hidden translation_2 -0.284897 -0.238057 0.03513
+  hidden rotation_2 0 0.9999999999999999 0 1.7365611933168217
+  hidden linearVelocity_2 -2.5436798364272325e-14 -3.3509381550507256e-15 2.5847639917900984e-16
+  hidden angularVelocity_2 -9.005723404393343e-16 -1.0636578729047764e-15 -2.1658841985339395e-15
+  hidden translation_3 0.284897 0.238057 0.03513
+  hidden rotation_3 0 -1 0 6.247847890774206
+  hidden linearVelocity_3 2.5141150112582936e-14 1.3203798335164514e-15 -2.067226582662707e-16
+  hidden angularVelocity_3 1.418368879014976e-16 -6.868609669910921e-18 -7.130444490418299e-15
+  hidden translation_4 -0.285061 0.235818 0.035257
+  hidden rotation_4 0 -0.9999999999999999 0 6.259892989602256
+  hidden linearVelocity_4 2.6367281124897153e-14 3.789319548864867e-15 3.101891957170265e-16
+  hidden angularVelocity_4 -3.130078880422833e-16 -1.0921233659570938e-15 -1.840198792126592e-15
+  translation 4.397755372036996 1.1153156748718198 0.06094169204594458
+  rotation -1.0812642454892944e-08 1.0106994193787121e-08 -0.9999999999999998 1.5029809128691358
+  controller "fabtino_webots_bridge_controller"
+  supervisor TRUE
+  bodySlot [
+    Solid {
+      translation 0.29 6.74634e-14 0
+      rotation 0 0 1 1.5708
+      children [
+        CadShape {
+          url [
+            "pudu_axes_trays_only_EXTENDED_SUPPORTS_0.4m_FIXED.obj"
+          ]
+        }
+      ]
+      name "tiers"
+    }
+    Solid {
+      translation -0.26 -2.65098e-07 -0.03
+      rotation 0 0 1 -1.5707953071795862
+      children [
+        CadShape {
+          url [
+            "../../../pudu_axes_trays_only_EXTENDED_SUPPORTS_0.4m_FIXED.obj"
+          ]
+        }
+      ]
+    }
+    Pose {
+      translation 0 0 0.025
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.12 0.12 0.14
+            roughness 0.35
+            metalness 0.25
+          }
+          geometry Cylinder {
+            height 0.05
+            radius 0.045
+            subdivision 32
+          }
+        }
+        Lidar {
+          name "mapping_lidar"
+          horizontalResolution 1024
+          fieldOfView 6.283185307179586
+          verticalFieldOfView 0.02
+          numberOfLayers 1
+          near 0.05
+          minRange 0.2
+          maxRange 12
+          noise 0.01
+          resolution 0.01
+        }
+        Gyro {
+          name "mapping_gyro"
+          resolution 0.001
+        }
+        Accelerometer {
+          name "mapping_accelerometer"
+          resolution 0.001
+        }
+        InertialUnit {
+          resolution 0.001
+        }
+      ]
+    }
+  ]
+}

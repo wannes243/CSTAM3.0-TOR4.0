@@ -1,0 +1,177 @@
+# Pioneer 3-AT simulation, localization, mapping, navigation and diagnostics.
+# Units are metres, seconds, radians, metres/second, and radians/second unless
+# the key name states otherwise. The local EKF map starts at the reset pose.
+
+robot:
+  initial_world_pose:
+    x_m: 0.0
+    y_m: 0.0
+    yaw_rad: 0.0
+  # Equivalent differential track for the current four-wheel encoder average.
+  # The Webots mecanum controller uses HALF_LENGTH + HALF_WIDTH = 0.521917 m
+  # for yaw, so the corresponding left/right separation is 2*K = 1.043834 m.
+  wheel_radius_m: 0.1000
+  track_width_m: 1.043834
+  max_linear_speed_mps: 0.5
+  max_angular_speed_rps: 1.5
+
+lidar:
+  # Closed intervals in degrees in the LiDAR local frame: 0 forward, + CCW.
+  # [] (or a missing key) keeps all rays. Example: [[10, 30], [100, 120]].
+  masked_angle_ranges: []
+
+simulation:
+  basic_time_step_ms: 16
+  # Runtime LiDAR resolution is read from the Webots device; this documents
+  # the expected 1024-ray device and is useful for calibration checks.
+  lidar_horizontal_resolution: 1024
+  lidar_fov_rad: 6.283185307179586
+  lidar_angle_sign: -1.0
+  lidar_min_range_m: 0.2
+  lidar_max_range_m: 12.0
+  # 1 uses every ray; 2 uses every second ray.
+  lidar_subsample: 1
+  # Keep scan matching/localization faster than occupancy-map integration.
+  localization_scan_period_s: 0.05
+  mapping_update_period_s: 0.05
+  viewer_update_period_s: 0.10
+
+estimator:
+  # Initial EKF covariance.
+  initial_position_std_m: 0.02
+  initial_yaw_std_rad: 0.05
+  initial_velocity_std_mps: 0.05
+  initial_angular_velocity_std_rps: 0.10
+  initial_gyro_bias_std_rps: 0.02
+
+  # EKF process-noise parameters.
+  accel_drive_std_mps2: 0.12
+  yaw_accel_std_rps2: 0.20
+  gyro_bias_rw_std_rps: 0.0008
+
+  # Wheel and gyro measurement uncertainty.
+  encoder_distance_std_m: 0.002
+  encoder_slip_std_m: 0.008
+  gyro_std_rps: 0.003
+
+  # IMU and optional future sensor-fusion settings.
+  accelerometer_enabled: false
+  accelerometer_std_mps2: 0.08
+  imu_yaw_std_rad: 0.01
+  use_imu_yaw_reference: true
+
+  # Active consecutive-scan LiDAR matcher.
+  lidar_scan_matcher:
+    enabled: true
+    min_points: 40
+    max_points: 96
+    max_match_error_m: 0.18
+    sigma_xy_m: 0.04
+    sigma_yaw_rad: 0.035
+    stationary_linear_velocity_mps: 0.01
+    stationary_angular_velocity_rps: 0.02
+    min_translation_m: 0.01
+    min_rotation_rad: 0.02
+    max_odom_translation_disagreement_m: 0.05
+    max_odom_rotation_disagreement_rad: 0.10
+    min_score_improvement_m: 0.002
+
+  # Used after the viewer loads a static occupancy image. The first scan is
+  # globally registered; later scans are tracked locally against the map.
+  known_map_localization:
+    enabled: true
+    min_points: 20
+    max_global_points: 100
+    max_refine_points: 300
+    search_xy_radius_m: 0.40
+    search_yaw_radius_rad: 0.30
+    coarse_xy_step_m: 0.10
+    coarse_yaw_step_rad: 0.10
+    fine_xy_step_m: 0.025
+    fine_yaw_step_rad: 0.035
+    occupied_tolerance_m: 0.10
+    min_static_hit_fraction: 0.20
+    sigma_xy_m: 0.06
+    sigma_yaw_rad: 0.05
+    # First valid scan: global search over the loaded map, then local tracking.
+    global_xy_step_m: 0.40
+    global_yaw_step_rad: 0.20
+    global_refine_xy_radius_m: 0.30
+    global_refine_yaw_radius_rad: 0.30
+    global_refine_xy_step_m: 0.05
+    global_refine_yaw_step_rad: 0.05
+    global_min_static_hit_fraction: 0.90
+    mean_distance_threshold_m: 0.06
+    distance_sigma_m: 0.06
+    global_min_free_space_fraction: 0.85
+    sector_coverage_min: 0.80
+    min_good_sectors: 6
+    best_second_difference_min: 0.04
+    candidate_count: 8
+    free_space_sample_step_m: 0.10
+
+  # Pose correction covariance for a future map/SLAM matcher interface.
+  lidar_pose_std_xy_m: 0.05
+  lidar_pose_std_yaw_rad: 0.04
+
+  diagnostic_logging: true
+  diagnostic_log_period_s: 0.5
+  ground_truth_diagnostics: true
+
+navigation:
+  # The 40 m x 40 m floor is represented by radius 20 m around the local map
+  # origin. Change this if the map origin or floor extent changes.
+  map_resolution_m: 0.10
+  map_radius_m: 20.0
+  safety_margin_m: 0.03
+  max_linear_speed_mps: 0.25
+  max_angular_speed_rps: 1.0
+  debug_logging: true
+  allow_unknown: true
+  unknown_cost: 1.15
+
+mapping:
+  # Each scan is integrated once using a timestamp-matched pose. These queues
+  # are bounded; scans outside the pose history tolerance are rejected.
+  scan_queue_size: 256
+  pose_history_size: 256
+  pose_match_tolerance_s: 0.05
+  lidar_angle_sign: -1.0
+  # Reversible browser occupancy evidence. Lower occupied strength avoids
+  # thick walls when pose/LiDAR measurements vary by a few centimetres.
+  free_evidence_step: 1
+  occupied_evidence_step: 1
+  free_threshold: -3
+  occupied_threshold: 4
+
+viewer:
+  # Initial browser view settings. The controller sends these values in each
+  # scan packet so the viewer can initialize from YAML instead of constants.
+  map_resolution_m: 0.10
+  map_radius_m: 20.0
+  point_voxel_size_m: 0.05
+
+safety:
+  command_timeout_s: 0.45
+  sensor_timeout_s: 0.5
+  max_state_covariance_xy_m2: 4.0
+  max_state_covariance_yaw_rad2: 1.0
+  # Zero is intentional for the 40 m open-floor world: walls can be beyond
+  # the 12 m LiDAR range, so zero valid obstacle returns is normal. The stale
+  # sensor timeout remains enabled.
+  min_lidar_valid_fraction: 0.0
+  front_stop_distance_m: 0.45
+  front_half_width_m: 0.25
+
+transport:
+  host: 127.0.0.1
+  port: 8766
+  command_timeout_s: 0.40
+  sensor_timeout_s: 0.50
+  decision_timeout_s: 0.30
+
+viewer_gateway:
+  host: 0.0.0.0
+  port: 8765
+  map_publish_period_s: 0.50
+  pointcloud_subsample: 4

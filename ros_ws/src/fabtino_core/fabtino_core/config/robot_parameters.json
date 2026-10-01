@@ -1,0 +1,103 @@
+{
+  "robot": {
+    "initial_world_pose": {
+      "x_m": 0.0,
+      "y_m": 0.0,
+      "yaw_rad": 0.0
+    },
+    "wheel_radius_m": 0.11,
+    "track_width_m": 0.394,
+    "max_linear_speed_mps": 0.5,
+    "max_angular_speed_rps": 1.5
+  },
+  "simulation": {
+    "basic_time_step_ms": 16,
+    "lidar_angle_sign": -1,
+    "lidar_min_range_m": 0.2,
+    "lidar_max_range_m": 12.0,
+    "lidar_subsample": 2
+  },
+  "estimator": {
+    "initial_position_std_m": 0.02,
+    "initial_yaw_std_rad": 0.05,
+    "initial_velocity_std_mps": 0.05,
+    "initial_angular_velocity_std_rps": 0.1,
+    "initial_gyro_bias_std_rps": 0.02,
+    "accel_drive_std_mps2": 0.12,
+    "yaw_accel_std_rps2": 0.2,
+    "gyro_bias_rw_std_rps": 0.0008,
+    "encoder_distance_std_m": 0.002,
+    "encoder_slip_std_m": 0.008,
+    "gyro_std_rps": 0.003,
+    "accelerometer_enabled": false,
+    "accelerometer_std_mps2": 0.08,
+    "lidar_pose_std_xy_m": 0.05,
+    "lidar_pose_std_yaw_rad": 0.04,
+    "imu_yaw_std_rad": 0.01,
+    "use_imu_yaw_reference": true,
+    "lidar_scan_matcher": {
+      "enabled": true,
+      "min_points": 40,
+      "max_points": 96,
+      "max_match_error_m": 0.18,
+    "sigma_xy_m": 0.04,
+    "sigma_yaw_rad": 0.035,
+    "stationary_linear_velocity_mps": 0.01,
+    "stationary_angular_velocity_rps": 0.02,
+    "min_translation_m": 0.01,
+    "min_rotation_rad": 0.02,
+    "max_odom_translation_disagreement_m": 0.05,
+    "max_odom_rotation_disagreement_rad": 0.10,
+    "min_score_improvement_m": 0.002
+    },
+  "known_map_localization": {
+      "enabled": true,
+      "min_points": 20,
+      "max_global_points": 100,
+      "max_refine_points": 300,
+      "search_xy_radius_m": 0.4,
+      "search_yaw_radius_rad": 0.3,
+      "coarse_xy_step_m": 0.1,
+      "coarse_yaw_step_rad": 0.1,
+      "fine_xy_step_m": 0.025,
+      "fine_yaw_step_rad": 0.035,
+      "occupied_tolerance_m": 0.1,
+      "min_static_hit_fraction": 0.2,
+      "sigma_xy_m": 0.06,
+    "sigma_yaw_rad": 0.05,
+    "global_xy_step_m": 0.4,
+    "global_yaw_step_rad": 0.2,
+    "global_refine_xy_radius_m": 0.3,
+    "global_refine_yaw_radius_rad": 0.3,
+    "global_refine_xy_step_m": 0.05,
+    "global_refine_yaw_step_rad": 0.05,
+    "global_min_static_hit_fraction": 0.9,
+    "mean_distance_threshold_m": 0.06,
+    "distance_sigma_m": 0.06,
+    "global_min_free_space_fraction": 0.85,
+    "sector_coverage_min": 0.8,
+    "min_good_sectors": 6,
+    "best_second_difference_min": 0.04,
+    "candidate_count": 8,
+    "free_space_sample_step_m": 0.1
+    },
+    "diagnostic_logging": true,
+    "diagnostic_log_period_s": 0.5
+  },
+  "navigation": {
+    "map_resolution_m": 0.05,
+    "map_radius_m": 20.0,
+    "safety_margin_m": 0.25,
+    "max_linear_speed_mps": 0.25,
+    "max_angular_speed_rps": 1.0
+  },
+  "safety": {
+    "command_timeout_s": 0.45,
+    "max_state_covariance_xy_m2": 4.0,
+    "max_state_covariance_yaw_rad2": 1.0,
+    "sensor_timeout_s": 0.5,
+    "min_lidar_valid_fraction": 0.0
+    ,"front_stop_distance_m": 0.45
+    ,"front_half_width_m": 0.25
+  }
+}

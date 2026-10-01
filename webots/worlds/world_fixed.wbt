@@ -1,0 +1,159 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/lights/protos/CeilingLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/lights/protos/FloorLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/apartment_structure/protos/Wall.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/Parquetry.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/robots/rec/fabtino/protos/Fabtino.proto"
+
+WorldInfo {
+  # Fabtino mecanum contact setup from the official Webots guide.
+  coordinateSystem "ENU"
+  contactProperties [
+    ContactProperties {
+      material1 "InteriorWheelMat"
+      coulombFriction [ 0 2 0 ]
+      frictionRotation -0.785398 0
+      bounce 0
+      forceDependentSlip [ 10 0 ]
+      softCFM 0.0001
+    }
+    ContactProperties {
+      material1 "ExteriorWheelMat"
+      coulombFriction [ 0 2 0 ]
+      frictionRotation 0.785398 0
+      bounce 0
+      forceDependentSlip [ 10 0 ]
+      softCFM 0.0001
+    }
+  ]
+  info [
+    "Fabtino apartment simulation"
+    "Official Webots Fabtino with a fixed, centered, horizontal 360-degree LiDAR."
+    "SPACE or the browser toggles LiDAR acquisition without changing the robot geometry."
+  ]
+  title "Fabtino LiDAR Apartment Mapper"
+  basicTimeStep 16
+}
+Viewpoint {
+  orientation -0.03613178838205978 0.04359462082878136 0.9983957145857091 1.7460842497128952
+  position 4.557866230916561 -0.8229492597403119 0.5228412598993941
+  near 0.1
+  follow "Fabtino"
+}
+TexturedBackground {
+}
+CeilingLight {
+  translation 1.82639 -1.29685 4.42
+  pointLightColor 1 1 0.9372549019607843
+  pointLightIntensity 7
+}
+CeilingLight {
+  translation -3.25511 6.10434 5.5
+  name "ceiling light(2)"
+  pointLightIntensity 6
+}
+FloorLight {
+  translation -4.52828 -6.73934 5.75
+  pointLightIntensity 2
+}
+Wall {
+  translation 20 0 0
+  size 0.3 40.3 2.4
+}
+Wall {
+  translation 0 20 0
+  rotation 0 0 1 1.5708
+  name "wall(2)"
+  size 0.3 39.7 2.4
+}
+Wall {
+  translation -20 0 0
+  name "wall(3)"
+  size 0.3 40.3 2.4
+}
+Wall {
+  translation 0 -20 0
+  rotation 0 0 1 1.5708
+  name "wall(4)"
+  size 0.3 39.7 2.4
+}
+Solid {
+  children [
+    Shape {
+      appearance Parquetry {
+        textureTransform TextureTransform {
+          scale 7 7
+        }
+      }
+      geometry Plane {
+        size 40 40
+      }
+    }
+  ]
+  boundingObject Plane {
+    size 39.9 39.9
+  }
+}
+Fabtino {
+  translation 4.397755372034627 1.1153156748716604 0.06094169204594458
+  rotation -1.0812654106267431e-08 1.0107005272245367e-08 -0.9999999999999998 1.5029809216946488
+  controller "fabtino_webots_bridge_controller"
+  supervisor TRUE
+  bodySlot [
+    Solid {
+      translation -0.26 -2.65098e-07 -0.03
+      rotation 0 0 1 -1.5707953071795862
+      children [
+        CadShape {
+          url [
+            "pudu_axes_trays_only_EXTENDED_SUPPORTS_0.4m_FIXED.obj"
+          ]
+        }
+      ]
+    }
+    Pose {
+      translation 0 0 0.025
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.12 0.12 0.14
+            roughness 0.35
+            metalness 0.25
+          }
+          geometry Cylinder {
+            height 0.05
+            radius 0.045
+            subdivision 32
+          }
+        }
+        Lidar {
+          name "mapping_lidar"
+          horizontalResolution 1024
+          fieldOfView 6.283185307179586
+          verticalFieldOfView 0.02
+          numberOfLayers 1
+          near 0.05
+          minRange 0.2
+          maxRange 12
+          noise 0.01
+          resolution 0.01
+        }
+        Gyro {
+          name "mapping_gyro"
+          resolution 0.001
+        }
+        Accelerometer {
+          name "mapping_accelerometer"
+          resolution 0.001
+        }
+        InertialUnit {
+          # Same ENU body axes as the co-located gyro and accelerometer.
+          name "inertial unit"
+          resolution 0.001
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "result": "unavailable",
+  "reason": "No module named 'rclpy'",
+  "scope": "Live ROS/Webots; no substitutes used"
+}

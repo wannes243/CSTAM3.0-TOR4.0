@@ -1,0 +1,2 @@
+-r requirements_ros2.txt
+pytest>=7,<10

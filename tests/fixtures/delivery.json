@@ -1,0 +1,11 @@
+{
+  "zones": [
+    {"id": "station-a", "name": "Station A", "x": 1.15, "y": 0.35, "radius": 0.1},
+    {"id": "station-b", "name": "Station B", "x": 0.15, "y": -1.1, "radius": 0.1}
+  ],
+  "base": {"x": 0.0, "y": 0.0, "yaw_deg": 0.0},
+  "tasks": [
+    {"zone_id": "station-a", "delay_s": 0.4},
+    {"zone_id": "station-b", "delay_s": 0.3}
+  ]
+}

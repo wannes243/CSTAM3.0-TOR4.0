@@ -1,0 +1,16 @@
+{
+  "result": "passed",
+  "elapsed_s": 75.285,
+  "viewer_hz": 9.32,
+  "sensor_age_p95_s": 0.0629,
+  "tasks_completed": 2,
+  "checks": [
+    "all sampled physical footprint positions outside both circles",
+    "settled arrival delays",
+    "automatic base return",
+    "cancel during delay",
+    "explicit base return",
+    "invalid config rejected"
+  ],
+  "scope": "Real WS/TCP, production adapters/controller; simulated ROS topics and ideal robot devices; scan-matcher correction disabled to isolate navigation"
+}

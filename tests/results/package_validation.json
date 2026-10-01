@@ -1,0 +1,125 @@
+{
+  "scope": "Portable: ROS topic/message doubles and simulated Webots devices; real TCP/WS and Chrome when requested",
+  "result": "passed",
+  "suites": [
+    {
+      "suite": "fabtino_core",
+      "result": "passed",
+      "elapsed_s": 2.337,
+      "tests": 64,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "fabtino_webots_bridge",
+      "result": "passed",
+      "elapsed_s": 1.315,
+      "tests": 49,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "fabtino_localization",
+      "result": "passed",
+      "elapsed_s": 1.746,
+      "tests": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "fabtino_mapping",
+      "result": "passed",
+      "elapsed_s": 1.577,
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "fabtino_navigation",
+      "result": "passed",
+      "elapsed_s": 1.928,
+      "tests": 81,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "fabtino_safety",
+      "result": "passed",
+      "elapsed_s": 0.491,
+      "tests": 25,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "fabtino_viewer",
+      "result": "passed",
+      "elapsed_s": 1.145,
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "fabtino_bringup",
+      "result": "passed",
+      "elapsed_s": 0.832,
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "controller",
+      "result": "passed",
+      "elapsed_s": 0.913,
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "pipeline",
+      "result": "passed",
+      "elapsed_s": 92.966,
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "node --test tests/test_navigation_ui.cjs tests/test_map_orientation.cjs tests/test_map_bundle.cjs",
+      "result": "passed",
+      "elapsed_s": 0.29
+    },
+    {
+      "suite": "node tests/controls_browser.cjs",
+      "result": "passed",
+      "elapsed_s": 11.212
+    },
+    {
+      "suite": "node tests/navigation_browser.cjs",
+      "result": "passed",
+      "elapsed_s": 1.406
+    },
+    {
+      "suite": "node tests/pipeline_browser.cjs",
+      "result": "passed",
+      "elapsed_s": 24.181
+    },
+    {
+      "suite": "node tests/features_browser.cjs",
+      "result": "passed",
+      "elapsed_s": 54.69
+    }
+  ],
+  "aggregation": "Latest completed isolated package and pipeline/browser runs after corrections",
+  "python_cases_including_subtests": 289,
+  "javascript_cases": 21,
+  "chrome_workflows": 4
+}

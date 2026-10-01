@@ -1,0 +1,13 @@
+{
+  "transport": "real TCP and WebSocket",
+  "ros": "in-process message/topic doubles",
+  "robot": "ideal wheel kinematics and raycast LiDAR; not Webots physics",
+  "elapsed_s": 12.089,
+  "viewer_hz": 7.96,
+  "sensor_age_p95_s": 0.1895,
+  "cancel_stop_s": 0.129,
+  "reconnect_first_scan_s": 0.5121,
+  "map_import_localization_s": 0.7764,
+  "lost_heartbeat_stop_s": 0.3992,
+  "result": "passed"
+}

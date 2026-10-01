@@ -1,0 +1,35 @@
+{
+  "scope": "Portable: ROS topic/message doubles and simulated Webots devices; real TCP/WS and Chrome when requested",
+  "result": "passed",
+  "suites": [
+    {
+      "suite": "pipeline",
+      "result": "passed",
+      "elapsed_s": 92.966,
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "node tests/controls_browser.cjs",
+      "result": "passed",
+      "elapsed_s": 11.212
+    },
+    {
+      "suite": "node tests/navigation_browser.cjs",
+      "result": "passed",
+      "elapsed_s": 1.406
+    },
+    {
+      "suite": "node tests/pipeline_browser.cjs",
+      "result": "passed",
+      "elapsed_s": 24.181
+    },
+    {
+      "suite": "node tests/features_browser.cjs",
+      "result": "passed",
+      "elapsed_s": 54.69
+    }
+  ]
+}

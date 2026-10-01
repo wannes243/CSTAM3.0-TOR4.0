@@ -1,0 +1,28 @@
+# Local dependencies, caches, and validation runtime environments.
+.test_runs/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+*.egg-info/
+node_modules/
+.venv/
+venv/
+.coverage
+.coverage.*
+htmlcov/
+
+# ROS 2 / Python build output and runtime logs.
+build/
+install/
+log/
+/logs/
+*.log
+/.previous_*/
+
+# Local settings and operating-system files.
+.env
+.env.*
+!.env.example
+!.env.sample
+.DS_Store
+Thumbs.db

@@ -1,0 +1,12 @@
+{
+  "result": "passed",
+  "scope": "Chrome and production HTML/JS, real WS/TCP, production adapters and controller; ROS topics and Webots devices simulated; localization defaults enabled",
+  "checks": [
+    "circle placement and form validation",
+    "base selection",
+    "ordered delivery with delays and return",
+    "PNG/JSON zone and base round trips",
+    "desktop/mobile fit",
+    "no browser or adapter errors"
+  ]
+}

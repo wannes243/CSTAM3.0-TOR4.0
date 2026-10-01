@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fabtino — Navigation et carte LiDAR</title>
+<style>
+:root{--bg:#080b10;--p:#101720;--p2:#0c1219;--line:#24303c;--text:#e7eef5;--muted:#8493a3;--green:#38f28a;--cyan:#39d9ff;--red:#ff5266;--yellow:#f4d35e}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px Segoe UI,Arial,sans-serif;overflow:hidden}
+#app{height:100vh;display:grid;grid-template-columns:300px 1fr;grid-template-rows:60px 1fr}
+header{grid-column:1/3;display:flex;justify-content:space-between;align-items:center;padding:0 16px;background:#0b1118;border-bottom:1px solid var(--line)}
+.brand{display:flex;gap:10px;align-items:center}.logo{border:2px solid var(--green);color:var(--green);padding:6px 8px;border-radius:8px;font-weight:800}.sub,.small{font-size:11px;color:var(--muted)}
+.status{display:flex;align-items:center;gap:8px;font-size:12px}#dot{width:9px;height:9px;border-radius:50%;background:var(--red)}#dot.on{background:var(--green)}
+aside{background:var(--p2);border-right:1px solid var(--line);padding:12px;overflow:auto}
+section{background:var(--p);border:1px solid var(--line);border-radius:9px;padding:11px;margin-bottom:10px}
+h3{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--cyan);margin:0 0 9px}
+button{background:#17212c;color:var(--text);border:1px solid var(--line);border-radius:7px;padding:9px;font-weight:700;cursor:pointer}
+button:hover{background:#203040}button.active{background:var(--green);color:#06110b;border-color:var(--green)}button.danger{color:#ff7a89}.big{width:100%}.row{display:flex;gap:7px}.row>*{flex:1}.row>input{min-width:0}
+input[type=range]{width:100%}.readout{font:12px Consolas,monospace;line-height:1.8;color:#b8c5d2}
+#drive{width:180px;margin:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+#drive button{height:44px;touch-action:none;user-select:none}.up{grid-column:2}.left{grid-row:2}.stop{grid-column:2;grid-row:2}.right{grid-column:3;grid-row:2}.down{grid-column:2;grid-row:3}
+#driveStatus{margin-top:8px;line-height:1.5}#safetyStatus{color:var(--yellow);line-height:1.5;margin-top:8px}#viewStatus{max-width:340px;line-height:1.4}
+#main{min-width:0;min-height:0;position:relative}
+#toolbar{height:45px;display:flex;align-items:center;gap:7px;padding:6px;background:#0b1118;border-bottom:1px solid var(--line)}#toolbar .spacer{flex:1}
+.view{position:absolute;inset:45px 0 0;display:none}.view.active{display:block}
+canvas{display:block;width:100%;height:100%}
+#mapInfo{position:absolute;left:10px;bottom:10px;background:#000a;padding:7px;border:1px solid var(--line);border-radius:6px;font-size:10px;color:var(--muted)}
+#log{font:10px Consolas;color:#7f91a1;max-height:90px;overflow:auto}
+.scanHelp{margin-top:8px;padding:8px;background:#0d1a14;border:1px solid #315040;border-radius:7px;color:#9fe7b9;font-size:10px;line-height:1.45}
+.badge{padding:4px 7px;border-radius:5px;background:#18232d;color:#aebdca;font-size:10px;font-weight:700}
+dialog{width:min(440px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;padding:24px;border:1px solid var(--line);border-radius:12px;background:var(--p);color:var(--text);box-shadow:0 16px 64px #0008}
+dialog::backdrop{background:#0009}
+dialog h2{margin:0 0 12px;font-size:21px}dialog p{line-height:1.5}
+dialog label{display:block;margin:16px 0 8px}dialog input[type=number]{width:100%;min-height:44px;font-size:18px}
+dialog .angle-option{display:flex;gap:10px;align-items:center;line-height:1.5}dialog input[type=checkbox]{width:18px;height:18px;flex:none}
+dialog .actions{display:flex;gap:12px;margin-top:20px}dialog .actions button{flex:1;min-height:44px}
+dialog .primary{background:var(--green);color:#08130d;font-weight:700}dialog .error{color:#ff93a0;min-height:20px;font-size:13px}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+button:disabled{opacity:.45;cursor:default}.feature-fields label{display:block;font-size:11px;color:var(--muted);margin:8px 0 4px}.feature-fields input,.feature-fields select{width:100%;min-width:0;padding:8px;background:var(--p2);color:var(--text);border:1px solid var(--line);border-radius:5px}.feature-item{display:flex;align-items:center;gap:7px;margin-top:7px;line-height:1.4}.feature-item span{flex:1;min-width:0;overflow-wrap:anywhere}.feature-item button{padding:6px;font-size:10px}.feature-status{margin-top:8px;line-height:1.5}.feature-fields ol{padding-left:18px}#placementHint{position:absolute;top:55px;left:10px;right:10px;z-index:3;background:#1f1920;border:1px solid var(--red);padding:10px;border-radius:7px}#placementHint:not([hidden]){display:flex;gap:10px;align-items:center}#placementText{flex:1}#zoneEmpty{margin-top:8px}
+@media(max-width:700px){body{overflow:auto}#app{height:auto;min-height:100dvh;grid-template-columns:minmax(0,1fr);grid-template-rows:60px minmax(280px,45dvh) auto}header{grid-column:1;padding:0 10px}.brand{gap:7px}.status{gap:5px}#main{grid-row:2}aside{grid-row:3;border-right:0;border-top:1px solid var(--line)}#toolbar>.small{display:none}#viewStatus{position:absolute;z-index:2;top:55px;left:10px;max-width:calc(100% - 20px);padding:8px;background:var(--p);border:1px solid var(--line);border-radius:6px}#viewStatus:empty{display:none}}
+</style>
+</head>
+<body>
+<div id="app">
+<header>
+  <div class="brand"><div class="logo">F</div><div><b>Fabtino Mapper</b><div class="sub">Carte LiDAR • Navigation • Vue 3D</div></div></div>
+  <div class="status"><span id="dot"></span><span id="status">Disconnected</span><span class="badge" id="scanBadge">SCAN OFF</span></div>
+</header>
+
+<aside>
+<section>
+<h3>Robot Control</h3>
+<div id="drive">
+<button class="up" data-d="up" aria-label="Avancer" title="Maintenir pour avancer">▲</button>
+<button class="left" data-d="left" aria-label="Tourner à gauche" title="Maintenir pour tourner à gauche">↶</button>
+<button class="stop danger" id="stop" aria-label="Arrêter le robot" title="Arrêter le robot">■</button>
+<button class="right" data-d="right" aria-label="Tourner à droite" title="Maintenir pour tourner à droite">↷</button>
+<button class="down" data-d="down" aria-label="Reculer" title="Maintenir pour reculer">▼</button>
+</div>
+<div class="small" lang="fr" style="margin-top:8px">Maintenez un bouton, W/A/S/D ou une flèche du clavier. Relâchez pour arrêter. ← / → font tourner le robot.</div>
+<div id="driveStatus" class="small" role="status" aria-live="polite">Connexion au robot en cours…</div>
+<div id="safetyStatus" class="small" role="status" aria-live="polite" hidden></div>
+</section>
+
+<section>
+<h3>LiDAR Scan</h3>
+<button id="scan" class="big">Start 360° LiDAR Scan</button>
+<div class="scanHelp"><b>SPACE</b> toggles LiDAR acquisition. The LiDAR itself is a fixed 360° sensor; there is no old pitch/arm axis.</div>
+<div style="height:8px"></div>
+<div class="row"><button id="resetMap">Clear Map</button><button id="resetOdom">Reset Odom</button></div>
+</section>
+
+<section>
+<h3>Map Settings</h3>
+<div class="small">Resolution: <b id="resVal">0.05 m</b></div>
+<input id="resolution" type="range" min=".02" max=".15" step=".01" value=".05">
+<div class="small">Radius: <b id="radiusVal">20 m</b></div>
+<input id="radius" type="range" min="5" max="40" step="1" value="20">
+<div class="small">Static obstacles require more than 3 seconds at the same position. Current returns remain visible in cyan and immediately affect navigation.</div>
+</section>
+
+<section>
+<h3>Autonomous Navigation</h3>
+<div class="row"><button id="explore">Explore Unknown</button><button id="navStop" class="danger">Stop Nav</button></div>
+<div class="small" lang="fr" style="margin-top:8px">Cliquez sur un point libre de la carte, choisissez l’angle d’arrivée, puis confirmez le départ.</div>
+<input id="knownMapFile" type="file" accept="image/*,.json,application/json" style="width:100%;margin-top:7px" aria-label="Import occupancy image or map bundle">
+<div class="row" style="margin-top:7px"><input id="knownMapResolution" type="number" min=".01" step=".01" value=".05" placeholder="m/cell" aria-label="Known map resolution in metres per cell"><input id="knownMapRadius" type="number" min="1" step="1" value="20" placeholder="radius m" aria-label="Known map radius in metres"></div>
+<button id="loadKnownMap" class="big" style="margin-top:7px">Load Known Map</button>
+<button id="liveMapMode" class="big" style="margin-top:7px">Use Live Mapping Mode</button>
+<div class="row" style="margin-top:7px"><input id="goalX" type="number" step=".1" placeholder="goal x (m)" aria-label="Goal X in metres" style="min-width:0"><input id="goalY" type="number" step=".1" placeholder="goal y (m)" aria-label="Goal Y in metres" style="min-width:0"></div>
+<label for="goalYaw" class="small" style="display:block;margin-top:7px">Final orientation (&deg;, optional)</label>
+<input id="goalYaw" type="number" step="any" placeholder="e.g. 90" aria-describedby="goalYawHelp" style="width:100%;margin-top:4px">
+<div id="goalYawHelp" class="small" style="margin-top:4px">0&deg; = +X, 90&deg; = +Y, 180&deg; = &minus;X. Leave blank to stop without a final turn. A map click opens a confirmation dialog.</div>
+<button id="sendGoal" class="big" style="margin-top:7px">Navigate to Coordinates</button>
+<div id="navStatus" class="small" role="status" aria-live="polite" style="margin-top:7px">Navigation idle</div>
+<div id="operationStatus" class="small" role="status" aria-live="polite" style="margin-top:7px"></div>
+</section>
+
+<section>
+<h3>Denied zones</h3>
+<div class="feature-fields">
+<label for="zoneName">Zone name</label><input id="zoneName" maxlength="60" placeholder="e.g. Packing station">
+<label for="zoneRadius">Radius (m)</label><input id="zoneRadius" type="number" min=".05" max="100" step=".05" value=".5">
+<button id="placeZone" class="big" style="margin-top:8px">Place circle on map</button>
+<div id="zoneStatus" class="small feature-status" role="status" aria-live="polite"></div>
+<div id="zoneEmpty" class="small">No denied zones yet. Navigation keeps the whole robot outside each circle.</div>
+<div id="zoneList"></div>
+</div>
+</section>
+<section>
+<h3>Delivery</h3>
+<div class="feature-fields">
+<div class="row"><button id="pickBase">Pick base on map</button><button id="currentBase">Use robot position</button></div>
+<div id="baseStatus" class="small feature-status"></div>
+<label for="taskZone">Destination zone</label><select id="taskZone" aria-label="Delivery destination"></select>
+<label for="taskDelay">Wait after arrival (seconds)</label><input id="taskDelay" type="number" min="0" max="86400" step=".1" value="0">
+<button id="addTask" class="big" style="margin-top:8px">Add stop to queue</button>
+<ol id="taskList" aria-label="Delivery stops in order"></ol>
+<label style="display:flex;gap:8px;align-items:center"><input id="returnAfter" type="checkbox" checked style="width:auto">Return to base after all stops</label>
+<button id="startDelivery" class="big" style="margin-top:8px">Start delivery</button>
+<div class="row" style="margin-top:8px"><button id="returnBase">Return to base</button><button id="cancelDelivery" class="danger">Cancel delivery</button></div>
+<div id="deliveryStatus" class="small feature-status" role="status" aria-live="polite">Delivery idle</div>
+</div>
+</section>
+<section>
+<h3>Live State</h3>
+<div class="readout">
+X <span id="x">0.00</span> m<br>
+Y <span id="y">0.00</span> m<br>
+Yaw <span id="yaw">0.0</span>°<br>
+Truth X/Y <span id="truthXY">n/a</span><br>
+Pos error <span id="posError">n/a</span> m<br>
+Yaw error <span id="yawError">n/a</span>°<br>
+Position RMSE <span id="posRmse">n/a</span> m<br>
+Hits <span id="hits">0</span><br>
+Occupied <span id="occ">0</span><br>
+Packets <span id="packets">0</span>
+</div>
+</section>
+
+<section>
+<h3>Export</h3>
+<button id="save" class="big">Export 2D Map PNG</button>
+<button id="saveBundle" class="big" style="margin-top:7px">Export map + zones JSON</button>
+<div class="small feature-status">Both formats include zones and the delivery base. Import a saved file to restore them after localization.</div>
+</section>
+
+<section>
+<h3>Log</h3>
+<div id="log"></div>
+</section>
+</aside>
+
+<div id="main">
+<div id="toolbar">
+<button id="mode2d" class="active" aria-pressed="true" aria-controls="view2d">2D MAP</button>
+<button id="mode3d" aria-pressed="false" aria-controls="view3d">3D VIEW</button>
+<span id="viewStatus" class="small" role="status" aria-live="polite"></span>
+<div class="spacer"></div>
+<div class="small">SPACE = LiDAR scan</div>
+</div>
+<div id="view2d" class="view active"><canvas id="mapCanvas" style="touch-action:none"></canvas><div id="mapInfo">TOP VIEW • wheel = zoom • drag = pan</div></div>
+<div id="placementHint" hidden><span id="placementText"></span><button id="cancelPlacement">Cancel</button></div>
+<div id="view3d" class="view"><canvas id="threeCanvas"></canvas></div>
+</div>
+</div>
+
+<dialog id="arrivalDialog" lang="fr" aria-labelledby="arrivalTitle" aria-describedby="arrivalHelp">
+  <form id="arrivalForm" novalidate>
+    <h2 id="arrivalTitle">Orientation à l’arrivée</h2>
+    <p id="arrivalCoordinates"></p>
+    <p id="arrivalHelp">Dans quelle direction le robot doit-il regarder une fois arrivé ?</p>
+    <label for="arrivalYaw">Angle final en degrés</label>
+    <input id="arrivalYaw" type="number" step="any" placeholder="Ex. : 80, 90 ou 180" aria-describedby="arrivalAxes arrivalError" autofocus>
+    <p id="arrivalAxes" class="small">Sur la carte : 0° → droite (+X), 90° ↑ haut (+Y), 180° ← gauche, −90° ↓ bas. Cet angle s’applique à l’arrivée.</p>
+    <label class="angle-option"><input id="arrivalWithoutAngle" type="checkbox">Sans orientation finale</label>
+    <p id="arrivalError" class="error" role="alert"></p>
+    <div class="actions"><button id="arrivalCancel" type="button">Annuler</button><button class="primary" type="submit">Démarrer</button></div>
+  </form>
+</dialog>
+
+<script type="importmap">
+{"imports":{"three":"./js/vendor/three/three.module.js","three/addons/controls/OrbitControls.js":"./js/vendor/three/OrbitControls.js"}}
+</script>
+
+<script type="module">
+import "./js/app.js?v=delivery-v8";
+</script>
+</body>
+</html>

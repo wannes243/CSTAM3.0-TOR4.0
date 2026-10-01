@@ -1,0 +1,15 @@
+{
+  "scope": "Portable: ROS topic/message doubles and simulated Webots devices; real TCP/WS and Chrome when requested",
+  "result": "passed",
+  "suites": [
+    {
+      "suite": "fabtino_navigation",
+      "result": "passed",
+      "elapsed_s": 1.928,
+      "tests": 81,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ]
+}
